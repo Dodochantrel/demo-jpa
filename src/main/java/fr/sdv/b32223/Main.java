@@ -1,7 +1,6 @@
 package fr.sdv.b32223;
 
-import fr.sdv.b32223.entities.Fournisseur;
-import fr.sdv.b32223.entities.Livre;
+import fr.sdv.b32223.entities.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -10,8 +9,9 @@ import java.util.List;
 // then press Enter. You can now see whitespace characters in your code.
 public class Main {
     public static void main(String[] args) {
+        TestBibliotheque();
 
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("demo");
+        /*EntityManagerFactory emf = Persistence.createEntityManagerFactory("demo");
         EntityManager em = emf.createEntityManager();
 
         Livre livre = em.find( Livre.class, 4);
@@ -52,6 +52,20 @@ public class Main {
         for (Livre livreList : livres) {
             System.out.println(livre.getTitre() + " par " + livreList.getAuteur());
         }
+
+        em.close();
+        emf.close();*/
+    }
+
+    public static void TestBibliotheque(){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("demo");
+        EntityManager em = emf.createEntityManager();
+
+        Emprunt emprunt = em.find( Emprunt.class, 1);
+        System.out.println(emprunt.getLivres());
+
+        Client client = em.find( Client.class, 1);
+        System.out.println(client.getEmprunts());
 
         em.close();
         emf.close();

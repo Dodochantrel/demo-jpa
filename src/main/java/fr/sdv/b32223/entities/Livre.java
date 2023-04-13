@@ -1,6 +1,7 @@
 package fr.sdv.b32223.entities;
 
 import javax.persistence.*;
+import java.util.*;
 
 @Entity
 @Table(name="livre")
@@ -14,10 +15,11 @@ public class Livre {
     @Column
     private String auteur;
 
-    public Livre(int id, String titre, String auteur) {
-        this.id = id;
-        this.titre = titre;
-        this.auteur = auteur;
+    @ManyToMany(mappedBy="livres")
+    private Set<Emprunt> emprunts;
+
+    {
+        emprunts = new HashSet<>();
     }
 
     public Livre(String titre, String auteur) {
@@ -51,6 +53,14 @@ public class Livre {
 
     public void setAuteur(String auteur) {
         this.auteur = auteur;
+    }
+
+    public Set<Emprunt> getEmprunts() {
+        return emprunts;
+    }
+
+    public void setEmprunts(Set<Emprunt> emprunts) {
+        this.emprunts = emprunts;
     }
 
     @Override
