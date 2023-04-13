@@ -1,19 +1,59 @@
 package fr.sdv.b32223;
 
+import fr.sdv.b32223.entities.Fournisseur;
+import fr.sdv.b32223.entities.Livre;
+
+import javax.persistence.*;
+import java.util.List;
+
 // Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
 // then press Enter. You can now see whitespace characters in your code.
 public class Main {
     public static void main(String[] args) {
-        // Press Alt+Entrée with your caret at the highlighted text to see how
-        // IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
 
-        // Press Maj+F10 or click the green arrow button in the gutter to run the code.
-        for (int i = 1; i <= 5; i++) {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("demo");
+        EntityManager em = emf.createEntityManager();
 
-            // Press Maj+F9 to start debugging your code. We have set one breakpoint
-            // for you, but you can always add more by pressing Ctrl+F8.
-            System.out.println("i = " + i);
+        Livre livre = em.find( Livre.class, 4);
+
+        System.out.println("Livre ID 4 : ");
+        System.out.println(livre);
+
+        em.getTransaction().begin();
+        Livre newLivre = new Livre( "Germinal", "Émile Zola");
+        em.persist(newLivre);
+        em.getTransaction().commit();
+        System.out.println("Nouveau livre : ");
+        System.out.println(newLivre);
+
+        em.getTransaction().begin();
+        Livre updateLivre = em.find( Livre.class, 5);
+        updateLivre.setTitre("Du plaisir dans la cuisine");
+        em.merge(updateLivre);
+        em.getTransaction().commit();
+        System.out.println("Le livre modifier : ");
+        System.out.println(updateLivre);
+
+        Query query = em.createQuery("SELECT l FROM Livre l WHERE l.titre = :titre");
+        query.setParameter("titre", "Germinal");
+        Livre germinaleBook = (Livre) query.getResultList().get(0);
+        System.out.println("Le livre Germinal : ");
+        System.out.println(germinaleBook);
+
+        em.getTransaction().begin();
+        Livre livreDelete = em.find(Livre.class, 5);
+        em.remove(livreDelete);
+        em.getTransaction().commit();
+
+        TypedQuery<Livre> toutLesLivres = em.createQuery("SELECT l FROM Livre l", Livre.class);
+        List<Livre> livres = toutLesLivres.getResultList();
+
+        System.out.println("Liste de tous les livres :");
+        for (Livre livreList : livres) {
+            System.out.println(livre.getTitre() + " par " + livreList.getAuteur());
         }
+
+        em.close();
+        emf.close();
     }
 }
